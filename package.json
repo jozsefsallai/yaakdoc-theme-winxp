@@ -1,0 +1,65 @@
+{
+  "name": "yaakdoc-theme-winxp",
+  "version": "0.1.0",
+  "description": "A Windows XP Luna inspired theme for yaakdoc.",
+  "type": "module",
+  "exports": {
+    ".": "./theme.ts",
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "yaak",
+    "yaakdoc",
+    "yaakdoc-theme",
+    "theme",
+    "windows-xp",
+    "luna"
+  ],
+  "author": "József Sallai @jozsefsallai",
+  "license": "MIT",
+  "files": [
+    "/theme.ts",
+    "/src",
+    "/tsconfig.json",
+    "/README.md",
+    "/LICENSE"
+  ],
+  "scripts": {
+    "dev": "cd example && yaakdoc dev",
+    "build": "cd example && yaakdoc build",
+    "preview": "cd example && yaakdoc preview",
+    "check-types": "tsc",
+    "lint": "biome check .",
+    "format": "biome check --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jozsefsallai/yaakdoc-theme-winxp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jozsefsallai/yaakdoc-theme-winxp/issues"
+  },
+  "homepage": "https://github.com/jozsefsallai/yaakdoc-theme-winxp#readme",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@yaakdoc/core": "^0.2.0",
+    "@yaakdoc/react": "^0.2.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^7.0.2",
+    "yaakdoc": "^0.2.0"
+  },
+  "packageManager": "pnpm@10.24.0"
+}

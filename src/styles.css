@@ -1,0 +1,2302 @@
+/*
+ * Windows XP ("Luna") theme for yaakdoc. Plain CSS, no build step.
+ *
+ * Three color schemes (Blue, Olive Green, Silver) are selected with the `scheme` theme option and
+ * applied as `data-xp-scheme` on the layout root. Branding from yaakdoc.config.json arrives as
+ * `--yd-*` custom properties: the primary color drives links and the selection highlight, the accent
+ * drives task pane link hovers, and the fonts replace the Tahoma/Lucida Console stacks.
+ *
+ * Dark mode is an original take on the "Royale Noir" style (glossy black chrome, charcoal surfaces),
+ * whatever the scheme. It follows `data-theme` on <html>, which yaakdoc's color mode script sets
+ * before first paint; without JavaScript, pages stay light.
+ */
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Tokens                                                                                          */
+/* ---------------------------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root {
+  --xp-font: var(--yd-font-sans, Tahoma, "Segoe UI", Verdana, "DejaVu Sans", sans-serif);
+  --xp-font-title: "Trebuchet MS", Tahoma, "Segoe UI", "DejaVu Sans", sans-serif;
+  --xp-font-mono: var(
+    --yd-font-mono,
+    "Lucida Console",
+    Consolas,
+    "DejaVu Sans Mono",
+    "Courier New",
+    monospace
+  );
+
+  --xp-desktop: #3a6ea5;
+  --xp-surface: #ece9d8;
+  --xp-paper: var(--yd-color-background, #ffffff);
+  --xp-text: var(--yd-color-foreground, #000000);
+  --xp-muted: #5f5d55;
+  --xp-edit-border: #7f9db9;
+  --xp-etch: #d0d0bf;
+  --xp-button-border: #003c74;
+  --xp-menu-border: #aca899;
+  --xp-field: #ffffff;
+  --xp-field-text: #000000;
+  --xp-highlight: #ffffff;
+  --xp-shadow-line: #a0a0a0;
+  --xp-toolbar-bg: linear-gradient(to bottom, #fbfbf8 0%, #ece9d8 70%, #e3e0d0 100%);
+  --xp-toolbar-border: #b9b7a8;
+  --xp-toolbar-hover-bg: linear-gradient(to bottom, #ffffff, #f3f2ec 60%, #e7e5da);
+  --xp-toolbar-hover-border: #cecec3;
+  --xp-toolbar-active-bg: #e3e1d6;
+  --xp-button-bg: linear-gradient(to bottom, #ffffff 0%, #ecebe6 86%, #d6d0c5 100%);
+  --xp-button-active-bg: linear-gradient(
+    to bottom,
+    #cdcac3 0%,
+    #e3e3db 8%,
+    #e5e5de 94%,
+    #f2f2f1 100%
+  );
+  --xp-button-text: #000000;
+  --xp-combo-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='18'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23dfe8ff'/%3E%3Cstop offset='1' stop-color='%23aec4f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='.5' y='.5' width='16' height='17' rx='2' fill='url(%23g)' stroke='%23b8cbf6'/%3E%3Cpath d='M5 7.5l3.5 3.5L12 7.5' fill='none' stroke='%234d6185' stroke-width='2'/%3E%3C/svg%3E");
+  --xp-combo-arrow-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='18'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f1f6ff'/%3E%3Cstop offset='1' stop-color='%23c3d6ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='.5' y='.5' width='16' height='17' rx='2' fill='url(%23g)' stroke='%2398b1ea'/%3E%3Cpath d='M5 7.5l3.5 3.5L12 7.5' fill='none' stroke='%234d6185' stroke-width='2'/%3E%3C/svg%3E");
+  --xp-menu-bg: #ffffff;
+  --xp-menu-label: #808080;
+  --xp-tag-bg: #f4f3ee;
+  --xp-header-bg: linear-gradient(to bottom, #ffffff 0%, #f6f5ef 60%, #ebeadb 100%);
+  --xp-header-divider: #c7c5b2;
+  --xp-header-bottom: #d6d2c2;
+  --xp-row-border: #f0efe7;
+  --xp-tab-bg: linear-gradient(to bottom, #ffffff 0%, #f6f5f0 50%, #ecebe5 100%);
+  --xp-tab-border: #919b9c;
+  --xp-tabpage-bg: #fcfcfe;
+  --xp-tabpage-shadow: #d0cebf;
+  --xp-code-bg: #f7f6f0;
+  --xp-code-border: #e0dfd4;
+  --xp-balloon-bg: #ffffe1;
+  --xp-balloon-border: #767676;
+  --xp-chevron-bg: linear-gradient(to bottom, #ffffff, #e9eef9);
+  --xp-group-border: #ffffff;
+  --xp-tree-line: #8c97b0;
+  --xp-start-bg: linear-gradient(
+    to bottom,
+    #3c9a3c 0%,
+    #6ac66a 8%,
+    #4cae4c 20%,
+    #389e38 50%,
+    #318f31 80%,
+    #2a7d2a 100%
+  );
+
+  --xp-chrome-height: 66px;
+  --xp-taskbar-height: 32px;
+
+  /* Method colors, tuned to the XP palette. */
+  --method-get: #3c8d2f;
+  --method-post: #2059c8;
+  --method-put: #d37b00;
+  --method-patch: #7d3cb5;
+  --method-delete: #c1272d;
+  --method-other: #6d6b62;
+  --method-grpc: #138a87;
+  --method-ws: #1a8bbf;
+}
+
+/* Blue ("Default (blue)"), also the fallback. */
+.xp-root,
+.xp-root[data-xp-scheme="blue"] {
+  --xp-title-bg: linear-gradient(
+    to bottom,
+    #0058ee 0%,
+    #3593ff 4%,
+    #288eff 6%,
+    #127dff 8%,
+    #036ffc 10%,
+    #0262ee 14%,
+    #0057e5 20%,
+    #0054e3 24%,
+    #0055eb 56%,
+    #005bf5 66%,
+    #026afe 76%,
+    #0062ef 86%,
+    #0052d6 92%,
+    #0040ab 94%,
+    #003092 100%
+  );
+  --xp-title-text: #ffffff;
+  --xp-title-shadow: 1px 1px #0f1089;
+  --xp-frame: #0058ee;
+  --xp-frame-dark: #0831d9;
+
+  --xp-control-bg: radial-gradient(
+    circle at 90% 90%,
+    #0054e9 0%,
+    #2263d5 55%,
+    #4479e4 70%,
+    #a3bbec 90%,
+    #ffffff 100%
+  );
+  --xp-control-glyph: #ffffff;
+  --xp-control-border: #ffffff;
+
+  --xp-pane-bg: linear-gradient(to bottom, #7ba2e7, #6375d6);
+  --xp-group-head-bg: linear-gradient(to right, #ffffff 0%, #c6d3f7 100%);
+  --xp-group-title: #215dc6;
+  --xp-group-title-hover: #428eff;
+  --xp-group-body: #d6dff7;
+  --xp-special-head-bg: linear-gradient(to right, #0048f1 0%, #3d7fea 100%);
+  --xp-special-title: #ffffff;
+  --xp-special-body: #eff3ff;
+  --xp-chevron-ring: #b4c6f0;
+  --xp-scheme-link: #215dc6;
+  --xp-scheme-select: #316ac5;
+
+  --xp-heading: #1c3f94;
+  --xp-heading-line: #4a7ee0;
+  --xp-groupbox-text: #0046d5;
+
+  --xp-taskbar-bg: linear-gradient(
+    to bottom,
+    #1f2f86 0%,
+    #3165c4 3%,
+    #3682e5 6%,
+    #4490e6 10%,
+    #3883e5 12%,
+    #2b71e0 15%,
+    #2663da 18%,
+    #235bd6 20%,
+    #2258d5 23%,
+    #2157d6 38%,
+    #245ddb 54%,
+    #2562df 86%,
+    #245fdc 89%,
+    #2158d4 92%,
+    #1d4ec0 95%,
+    #1941a5 98%
+  );
+  --xp-taskbar-text: #ffffff;
+  --xp-task-bg: linear-gradient(to bottom, #1e4fb4, #1a48a8 60%, #1d50b8);
+  --xp-task-border: #10307a;
+  --xp-tray-bg: linear-gradient(
+    to bottom,
+    #0c59b9 1%,
+    #139ee9 6%,
+    #18b5f2 10%,
+    #139beb 14%,
+    #1290e8 19%,
+    #0d8dea 63%,
+    #0d9ff1 81%,
+    #0f9eed 88%,
+    #119be9 91%,
+    #1392e2 94%,
+    #137ed7 97%,
+    #095bc9 100%
+  );
+  --xp-tray-border: #092e51;
+}
+
+.xp-root[data-xp-scheme="olive"] {
+  --xp-title-bg: linear-gradient(
+    to bottom,
+    #a4b97a 0%,
+    #c6d59c 5%,
+    #b4c78a 10%,
+    #9db06d 20%,
+    #93a764 45%,
+    #8ea15e 60%,
+    #9aad69 75%,
+    #879b56 90%,
+    #6e8240 95%,
+    #5b6e33 100%
+  );
+  --xp-title-text: #ffffff;
+  --xp-title-shadow: 1px 1px #4a5b25;
+  --xp-frame: #93a764;
+  --xp-frame-dark: #5f7236;
+
+  --xp-control-bg: radial-gradient(
+    circle at 90% 90%,
+    #6d8838 0%,
+    #86a050 55%,
+    #9cb46a 70%,
+    #d7e2b9 90%,
+    #ffffff 100%
+  );
+  --xp-control-glyph: #ffffff;
+  --xp-control-border: #ffffff;
+
+  --xp-pane-bg: linear-gradient(to bottom, #ccd9ad, #a5bd84);
+  --xp-group-head-bg: linear-gradient(to right, #fffffc 0%, #e0e7b8 100%);
+  --xp-group-title: #56662d;
+  --xp-group-title-hover: #72863d;
+  --xp-group-body: #f6f6ec;
+  --xp-special-head-bg: linear-gradient(to right, #779a49 0%, #a8c27e 100%);
+  --xp-special-title: #ffffff;
+  --xp-special-body: #f6f6ec;
+  --xp-chevron-ring: #c9d4a6;
+  --xp-scheme-link: #4e6a1f;
+  --xp-scheme-select: #93a070;
+
+  --xp-heading: #4a5c22;
+  --xp-heading-line: #93a764;
+  --xp-groupbox-text: #5a7230;
+
+  --xp-taskbar-bg: linear-gradient(
+    to bottom,
+    #5f7536 0%,
+    #a3b77b 4%,
+    #b6c78f 8%,
+    #a9bc80 14%,
+    #9bb070 25%,
+    #94aa69 50%,
+    #8da263 80%,
+    #7f9555 94%,
+    #6b8044 100%
+  );
+  --xp-taskbar-text: #ffffff;
+  --xp-task-bg: linear-gradient(to bottom, #7a8f4b, #73884a 60%, #7d9452);
+  --xp-task-border: #4f6128;
+  --xp-tray-bg: linear-gradient(to bottom, #e3e9c4 0%, #d2dcab 50%, #c4d098 100%);
+  --xp-tray-border: #8ea15e;
+}
+
+.xp-root[data-xp-scheme="silver"] {
+  --xp-title-bg: linear-gradient(
+    to bottom,
+    #fdfdfe 0%,
+    #e8e8ef 10%,
+    #d9d9e4 30%,
+    #cfcfdc 50%,
+    #c6c6d6 70%,
+    #c0c0d1 85%,
+    #a8a8bd 95%,
+    #8c8ca5 100%
+  );
+  --xp-title-text: #1f1f2e;
+  --xp-title-shadow: 1px 1px #ffffff;
+  --xp-frame: #c0c0d1;
+  --xp-frame-dark: #8c8ca5;
+
+  --xp-control-bg: linear-gradient(to bottom, #ffffff 0%, #e6e6ee 45%, #c8c8d6 100%);
+  --xp-control-glyph: #3f3f55;
+  --xp-control-border: #8c8ca5;
+  --xp-close-border: #8c8ca5;
+
+  --xp-pane-bg: linear-gradient(to bottom, #c4c8d4, #b1b3c8);
+  --xp-group-head-bg: linear-gradient(to right, #ffffff 0%, #d6d7e0 100%);
+  --xp-group-title: #3f3d3d;
+  --xp-group-title-hover: #7e7c7c;
+  --xp-group-body: #f0f1f5;
+  --xp-special-head-bg: linear-gradient(to right, #77778a 0%, #b4b3c8 100%);
+  --xp-special-title: #ffffff;
+  --xp-special-body: #f0f1f5;
+  --xp-chevron-ring: #c4c5d2;
+  --xp-scheme-link: #3a3a6e;
+  --xp-scheme-select: #6b6f8a;
+
+  --xp-heading: #33334d;
+  --xp-heading-line: #9a9ab2;
+  --xp-groupbox-text: #4a4a68;
+
+  --xp-taskbar-bg: linear-gradient(
+    to bottom,
+    #8c8ca5 0%,
+    #f4f4f8 5%,
+    #e4e4ec 15%,
+    #d6d6e2 50%,
+    #cbcbd9 85%,
+    #b2b2c6 100%
+  );
+  --xp-taskbar-text: #1f1f2e;
+  --xp-task-bg: linear-gradient(to bottom, #c3c3d3, #babacb 60%, #c6c6d6);
+  --xp-task-border: #8c8ca5;
+  --xp-tray-bg: linear-gradient(to bottom, #f6f6f9 0%, #e7e7ee 50%, #d8d8e3 100%);
+  --xp-tray-border: #a0a0b8;
+}
+
+/*
+ * Dark mode: Royale Noir. The page tokens are on :root (the body uses them too); the scheme tokens
+ * override every Luna scheme (higher specificity than `.xp-root[data-xp-scheme]`).
+ */
+:root[data-theme="dark"] {
+  --xp-desktop: #0d0d0f;
+  --xp-surface: #26262a;
+  --xp-paper: var(--yd-color-background, #1b1b1e);
+  --xp-text: var(--yd-color-foreground, #e4e4e7);
+  --xp-muted: #a3a3ab;
+  --xp-edit-border: #55555e;
+  --xp-etch: #404047;
+  --xp-button-border: #050506;
+  --xp-menu-border: #55555e;
+  --xp-field: #141416;
+  --xp-field-text: #e4e4e7;
+  --xp-highlight: rgb(255 255 255 / 0.07);
+  --xp-shadow-line: #0c0c0e;
+  --xp-toolbar-bg: linear-gradient(to bottom, #3a3a3f 0%, #2a2a2e 60%, #222225 100%);
+  --xp-toolbar-border: #0a0a0b;
+  --xp-toolbar-hover-bg: linear-gradient(to bottom, #4a4a50, #38383d 60%, #2e2e33);
+  --xp-toolbar-hover-border: #5a5a62;
+  --xp-toolbar-active-bg: #1e1e21;
+  --xp-button-bg: linear-gradient(to bottom, #55555c 0%, #3a3a40 50%, #2c2c31 86%, #222226 100%);
+  --xp-button-active-bg: linear-gradient(to bottom, #1c1c1f 0%, #26262a 10%, #2c2c30 100%);
+  --xp-button-text: #f0f0f2;
+  --xp-combo-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='18'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235a5a62'/%3E%3Cstop offset='1' stop-color='%232e2e33'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='.5' y='.5' width='16' height='17' rx='2' fill='url(%23g)' stroke='%236a6a73'/%3E%3Cpath d='M5 7.5l3.5 3.5L12 7.5' fill='none' stroke='%23d8d8de' stroke-width='2'/%3E%3C/svg%3E");
+  --xp-combo-arrow-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='18'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236c6c75'/%3E%3Cstop offset='1' stop-color='%233a3a40'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='.5' y='.5' width='16' height='17' rx='2' fill='url(%23g)' stroke='%2385858f'/%3E%3Cpath d='M5 7.5l3.5 3.5L12 7.5' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E");
+  --xp-menu-bg: #2a2a2e;
+  --xp-menu-label: #8b8b93;
+  --xp-tag-bg: #313136;
+  --xp-header-bg: linear-gradient(to bottom, #3d3d43 0%, #313136 60%, #2a2a2f 100%);
+  --xp-header-divider: #4a4a52;
+  --xp-header-bottom: #4f4f58;
+  --xp-row-border: #26262a;
+  --xp-tab-bg: linear-gradient(to bottom, #45454b 0%, #36363b 50%, #2d2d32 100%);
+  --xp-tab-border: #5a5a62;
+  --xp-tabpage-bg: #222226;
+  --xp-tabpage-shadow: #0e0e10;
+  --xp-code-bg: #2c2c31;
+  --xp-code-border: #3e3e46;
+  --xp-balloon-bg: #34321f;
+  --xp-balloon-border: #77744f;
+  --xp-chevron-bg: linear-gradient(to bottom, #55555c, #2c2c31);
+  --xp-group-border: #3a3a40;
+  --xp-tree-line: #5c5c66;
+  --xp-start-bg: linear-gradient(
+    to bottom,
+    #2e6b2e 0%,
+    #4a9a4a 8%,
+    #2f7a2f 20%,
+    #236323 50%,
+    #1d561d 80%,
+    #164516 100%
+  );
+
+  --method-get: #4caf3f;
+  --method-post: #3d7be0;
+  --method-put: #e08a16;
+  --method-patch: #9a5ad1;
+  --method-delete: #d9363c;
+  --method-other: #85837a;
+  --method-grpc: #1fa5a1;
+  --method-ws: #2aa3d6;
+}
+
+:root[data-theme="dark"] .xp-root {
+  --xp-title-bg: linear-gradient(
+    to bottom,
+    #6a6a70 0%,
+    #4a4a50 6%,
+    #38383d 20%,
+    #2a2a2e 45%,
+    #0f0f11 50%,
+    #141416 70%,
+    #1e1e22 88%,
+    #2a2a30 96%,
+    #0a0a0b 100%
+  );
+  --xp-title-text: #f2f2f4;
+  --xp-title-shadow: 1px 1px #000000;
+  --xp-frame: #1f1f23;
+  --xp-frame-dark: #000000;
+
+  --xp-control-bg: radial-gradient(
+    circle at 90% 90%,
+    #0c0c0e 0%,
+    #2a2a2f 55%,
+    #404047 70%,
+    #8a8a93 90%,
+    #c8c8cf 100%
+  );
+  --xp-control-glyph: #ffffff;
+  --xp-control-border: #8a8a93;
+  --xp-close-border: #8a8a93;
+
+  --xp-pane-bg: linear-gradient(to bottom, #2e2e33, #18181b);
+  --xp-group-head-bg: linear-gradient(to right, #4a4a51 0%, #2c2c31 100%);
+  --xp-group-title: #ececf0;
+  --xp-group-title-hover: #ffffff;
+  --xp-group-body: #222226;
+  --xp-special-head-bg: linear-gradient(to right, #0e0e10 0%, #3c3c44 100%);
+  --xp-special-title: #ffffff;
+  --xp-special-body: #2a2a2f;
+  --xp-chevron-ring: #6a6a73;
+  --xp-scheme-link: #8db6ff;
+  --xp-scheme-select: #3b5d93;
+  --xp-group-link: #d4d4dc;
+  --xp-group-link-hover: var(--yd-color-accent, #ffffff);
+
+  --xp-heading: #eeeef2;
+  --xp-heading-line: #8a8a96;
+  --xp-groupbox-text: #8db6ff;
+
+  --xp-taskbar-bg: linear-gradient(
+    to bottom,
+    #5a5a60 0%,
+    #2c2c31 6%,
+    #1c1c20 45%,
+    #050506 52%,
+    #0d0d0f 85%,
+    #1a1a1d 100%
+  );
+  --xp-taskbar-text: #ffffff;
+  --xp-task-bg: linear-gradient(to bottom, #0a0a0b, #19191c 60%, #222226);
+  --xp-task-border: #4a4a52;
+  --xp-tray-bg: linear-gradient(to bottom, #45454c 0%, #26262a 45%, #121214 55%, #1c1c20 100%);
+  --xp-tray-border: #000000;
+}
+
+.xp-root {
+  --xp-link: var(--yd-color-primary, var(--xp-scheme-link));
+  --xp-select: var(--yd-color-primary, var(--xp-scheme-select));
+  --xp-select-text: #ffffff;
+  --xp-group-link: var(--xp-scheme-link);
+  --xp-group-link-hover: var(--yd-color-accent, var(--xp-group-title-hover));
+}
+
+/* Method colors as a custom property (used by badges and the request line). */
+[data-method],
+[data-yd="nav-link"] {
+  --method: var(--method-other);
+}
+
+[data-method="get"],
+[data-yd="nav-link"]:has(> [data-method="get"]) {
+  --method: var(--method-get);
+}
+
+[data-method="post"],
+[data-yd="nav-link"]:has(> [data-method="post"]) {
+  --method: var(--method-post);
+}
+
+[data-method="put"],
+[data-yd="nav-link"]:has(> [data-method="put"]) {
+  --method: var(--method-put);
+}
+
+[data-method="patch"],
+[data-yd="nav-link"]:has(> [data-method="patch"]) {
+  --method: var(--method-patch);
+}
+
+[data-method="delete"],
+[data-yd="nav-link"]:has(> [data-method="delete"]) {
+  --method: var(--method-delete);
+}
+
+[data-method="grpc"],
+[data-yd="nav-link"]:has(> [data-method="grpc"]) {
+  --method: var(--method-grpc);
+}
+
+[data-method="ws"],
+[data-yd="nav-link"]:has(> [data-method="ws"]) {
+  --method: var(--method-ws);
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Base                                                                                            */
+/* ---------------------------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: calc(var(--xp-chrome-height) + 12px);
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--xp-desktop);
+  color: var(--xp-text);
+  font-family: var(--xp-font);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+a {
+  color: var(--xp-link);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--xp-select);
+  color: var(--xp-select-text);
+}
+
+:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: 1px;
+}
+
+.xp-icon {
+  flex-shrink: 0;
+}
+
+.xp-mono {
+  font-family: var(--xp-font-mono);
+}
+
+.xp-muted {
+  color: var(--xp-muted);
+}
+
+.xp-skip-link {
+  position: absolute;
+  left: -9999px;
+  z-index: 100;
+}
+
+.xp-skip-link:focus {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  padding: 6px 10px;
+  background: #ffffe1;
+  border: 1px solid #000000;
+  color: #000000;
+}
+
+/* Shiki dual themes: pick the variant matching the color mode. */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+
+.shiki {
+  background-color: var(--shiki-light-bg, var(--xp-field));
+}
+
+:root[data-theme="dark"] .shiki,
+:root[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark);
+}
+
+:root[data-theme="dark"] .shiki {
+  background-color: var(--shiki-dark-bg, var(--xp-field));
+}
+
+/* Logos with light and dark variants. */
+[data-yd-logo="dark"],
+:root[data-theme="dark"] [data-yd-logo="light"] {
+  display: none;
+}
+
+:root[data-theme="dark"] [data-yd-logo="dark"] {
+  display: inline;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Layout                                                                                          */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  /* Room for the taskbar, which is fixed to the bottom of the viewport. */
+  padding-bottom: var(--xp-taskbar-height);
+}
+
+.xp-chrome {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.xp-workspace {
+  display: grid;
+  flex: 1;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  background: var(--xp-paper);
+}
+
+.xp-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-left: 1px solid var(--xp-frame-dark);
+}
+
+.xp-content {
+  flex: 1;
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 20px clamp(16px, 3vw, 40px) 48px;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Title bar                                                                                       */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 5px 0 8px;
+  border-radius: 8px 8px 0 0;
+  background: var(--xp-title-bg);
+  color: var(--xp-title-text);
+  font-family: var(--xp-font-title);
+  font-size: 13px;
+  font-weight: bold;
+  text-shadow: var(--xp-title-shadow);
+}
+
+.xp-caption-icon {
+  display: inline-flex;
+}
+
+.xp-caption {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.xp-caption img {
+  width: auto;
+  height: 18px;
+}
+
+.xp-caption [data-yd="site-title"] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xp-window-controls {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.xp-control,
+.xp-nav-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 21px;
+  height: 21px;
+  padding: 0;
+  border: 1px solid var(--xp-control-border);
+  border-radius: 3px;
+  background: var(--xp-control-bg);
+  box-shadow: inset 0 -1px 2px rgb(0 0 0 / 0.15);
+  color: var(--xp-control-glyph);
+}
+
+.xp-control::before,
+.xp-control::after {
+  content: "";
+  position: absolute;
+}
+
+.xp-control-minimize::before {
+  bottom: 4px;
+  left: 4px;
+  width: 7px;
+  height: 3px;
+  background: var(--xp-control-glyph);
+}
+
+.xp-control-maximize::before {
+  inset: 3px;
+  border: 1px solid var(--xp-control-glyph);
+  border-top-width: 3px;
+}
+
+.xp-control-close {
+  background: radial-gradient(
+    circle at 90% 90%,
+    #cc4600 0%,
+    #dc6527 55%,
+    #cd7546 70%,
+    #ffccb2 90%,
+    #ffffff 100%
+  );
+  --xp-control-glyph: #ffffff;
+}
+
+.xp-control-close {
+  border-color: var(--xp-close-border, var(--xp-control-border));
+}
+
+.xp-control-close::before,
+.xp-control-close::after {
+  top: 50%;
+  left: 50%;
+  width: 11px;
+  height: 2px;
+  background: var(--xp-control-glyph);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.xp-control-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.xp-nav-toggle {
+  display: none;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.xp-nav-toggle .xp-icon {
+  width: 13px;
+  height: 13px;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Toolbar                                                                                         */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 10px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--xp-toolbar-border);
+  background: var(--xp-toolbar-bg);
+  box-shadow: inset 0 1px var(--xp-highlight);
+  color: var(--xp-text);
+  font-size: 12px;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.xp-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.xp-field-label {
+  color: var(--xp-muted);
+}
+
+.xp-address {
+  flex: 1 1 auto;
+  min-width: 10rem;
+}
+
+.xp-address-box {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  height: 22px;
+  padding: 0 6px 0 3px;
+  border: 1px solid var(--xp-edit-border);
+  background: var(--xp-field);
+  color: var(--xp-field-text);
+}
+
+.xp-address-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.xp-select {
+  height: 22px;
+  min-width: 8rem;
+  padding: 0 24px 0 4px;
+  border: 1px solid var(--xp-edit-border);
+  border-radius: 0;
+  background-color: var(--xp-field);
+  background-image: var(--xp-combo-arrow);
+  background-position: right 1px center;
+  background-repeat: no-repeat;
+  color: var(--xp-field-text);
+  font: inherit;
+  appearance: none;
+}
+
+.xp-select:hover {
+  background-image: var(--xp-combo-arrow-hover);
+}
+
+.xp-select-static {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  padding-right: 8px;
+  background-image: none;
+}
+
+.xp-toolbar-links {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.xp-toolbar-button {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--xp-text);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.xp-toolbar-button:hover {
+  border-color: var(--xp-toolbar-hover-border);
+  background: var(--xp-toolbar-hover-bg);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 0.08);
+}
+
+.xp-toolbar-button:active {
+  background: var(--xp-toolbar-active-bg);
+  box-shadow: inset 1px 1px 1px rgb(0 0 0 / 0.15);
+}
+
+.xp-color-mode {
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  padding: 0;
+}
+
+.xp-color-mode-dark,
+:root[data-theme="dark"] .xp-color-mode-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .xp-color-mode-dark {
+  display: inline;
+}
+
+.xp-toolbar-yaak {
+  flex-shrink: 0;
+}
+
+.xp-run-in-yaak {
+  display: block;
+}
+
+.xp-run-in-yaak img {
+  display: block;
+  width: auto;
+  height: 26px;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Task pane (sidebar) and navigation                                                              */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-taskpane {
+  position: sticky;
+  top: var(--xp-chrome-height);
+  height: calc(100dvh - var(--xp-chrome-height) - var(--xp-taskbar-height));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--xp-pane-bg);
+  scrollbar-width: thin;
+}
+
+.xp-taskpane-scroll {
+  padding: 12px 12px 32px;
+}
+
+.xp-taskgroup,
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] {
+  margin-bottom: 12px;
+}
+
+.xp-taskgroup-header,
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] > details > summary {
+  display: flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 2px 30px 2px 10px;
+  border-radius: 4px 4px 0 0;
+  background: var(--xp-group-head-bg);
+  color: var(--xp-group-title);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.xp-taskgroup-special .xp-taskgroup-header {
+  padding-right: 10px;
+  background: var(--xp-special-head-bg);
+  color: var(--xp-special-title);
+}
+
+.xp-taskgroup-header span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xp-taskgroup-body,
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] > details > [data-yd="nav-list"] {
+  padding: 8px 10px;
+  border: 1px solid var(--xp-group-border);
+  border-top: 0;
+  background: var(--xp-group-body);
+}
+
+.xp-taskgroup-special .xp-taskgroup-body {
+  background: var(--xp-special-body);
+}
+
+.xp-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 4px;
+  border: 1px solid var(--xp-edit-border);
+  background: var(--xp-field);
+}
+
+.xp-search:focus-within {
+  border-color: var(--xp-select);
+}
+
+.xp-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--xp-field-text);
+  font: inherit;
+  font-size: 12px;
+}
+
+.xp-search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.xp-task-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: var(--xp-group-link);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.xp-taskgroup-places {
+  display: none;
+}
+
+.xp-task-yaak {
+  margin-top: 10px;
+}
+
+.xp-task-link:hover {
+  color: var(--xp-group-link-hover);
+  text-decoration: underline;
+}
+
+.xp-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xp-nav summary {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.xp-nav summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Task group header: the round double-chevron button. */
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] > details > summary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--xp-chevron-ring);
+  border-radius: 50%;
+  background: var(--xp-chevron-bg);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 0.12);
+  transform: translateY(-50%);
+}
+
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] > details > summary::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 10px;
+  width: 10px;
+  height: 10px;
+  background: var(--xp-group-title);
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 1.5l3 3 3-3M2 5.5l3 3 3-3' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  transform: translateY(-50%);
+}
+
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] > details[open] > summary::before {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] > details > summary:hover {
+  color: var(--xp-group-title-hover);
+}
+
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] > details > summary:hover::before {
+  background: var(--xp-group-title-hover);
+}
+
+.xp-nav [data-depth="0"] > [data-yd-nav-folder] > details > summary [data-yd="nav-label"] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Nested folders: Explorer tree rows with a folder icon and dotted guide lines. */
+.xp-nav [data-depth]:not([data-depth="0"]) [data-yd-nav-folder] > details > summary {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 4px;
+  color: var(--xp-group-link);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.xp-nav [data-depth]:not([data-depth="0"]) [data-yd-nav-folder] > details > summary::before {
+  content: "";
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2.5 7.5a2 2 0 0 1 2-2h7l2.5 3h13.5a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2h-23a2 2 0 0 1-2-2z' fill='%23f7d77c' stroke='%23c08a1e'/%3E%3Cpath d='M2.5 13.5a2 2 0 0 1 2-2h23a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-23a2 2 0 0 1-2-2z' fill='%23f2bf4f' stroke='%23c08a1e'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+.xp-nav [data-depth]:not([data-depth="0"]) [data-yd-nav-folder] > details > summary:hover {
+  color: var(--xp-group-link-hover);
+  text-decoration: underline;
+}
+
+.xp-nav [data-depth]:not([data-depth="0"]) [data-yd="nav-list"] {
+  margin-left: 11px;
+  padding-left: 8px;
+  border-left: 1px dotted var(--xp-tree-line);
+}
+
+/* Top-level requests (outside folders): one task group body per run of consecutive requests. */
+.xp-nav [data-depth="0"] > [data-yd-nav-item] {
+  padding: 0 10px;
+  border-inline: 1px solid var(--xp-group-border);
+  background: var(--xp-group-body);
+}
+
+.xp-nav [data-depth="0"] > [data-yd-nav-item]:not([data-yd-nav-item] + [data-yd-nav-item]) {
+  padding-top: 6px;
+  border-top: 1px solid var(--xp-group-border);
+  border-radius: 4px 4px 0 0;
+}
+
+.xp-nav [data-depth="0"] > [data-yd-nav-item]:not(:has(+ [data-yd-nav-item])) {
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--xp-group-border);
+}
+
+.xp-nav [data-yd="nav-link"] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 1px 0;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  color: var(--xp-group-link);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.xp-nav [data-yd="nav-link"]:hover {
+  color: var(--xp-group-link-hover);
+}
+
+.xp-nav [data-yd="nav-link"]:hover [data-yd="nav-label"] {
+  text-decoration: underline;
+}
+
+.xp-nav [data-yd="nav-link"][aria-current] {
+  border: 1px dotted #ffffff;
+  background: var(--xp-select);
+  color: var(--xp-select-text);
+}
+
+.xp-nav [data-yd="nav-label"] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Controls                                                                                        */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: 23px;
+  padding: 0 12px;
+  border: 1px solid var(--xp-button-border);
+  border-radius: 3px;
+  background: var(--xp-button-bg);
+  color: var(--xp-button-text);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.xp-button:hover {
+  box-shadow:
+    inset -1px 1px #fff0cf,
+    inset 1px 2px #fdd889,
+    inset -2px 2px #fbc761,
+    inset 2px -2px #e5a01a;
+}
+
+.xp-button:focus-visible,
+.xp-button-default {
+  outline: none;
+  box-shadow:
+    inset -1px 1px #cee7ff,
+    inset 1px 2px #98b8ea,
+    inset -2px 2px #bcd4f6,
+    inset 1px -1px #89ade4,
+    inset 2px -2px #89ade4;
+}
+
+.xp-button:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: -4px;
+}
+
+.xp-button:active {
+  background: var(--xp-button-active-bg);
+  box-shadow: none;
+}
+
+.xp-button-small {
+  min-height: 21px;
+  padding: 0 8px;
+}
+
+.xp-button-icon {
+  width: 24px;
+  min-height: 20px;
+  padding: 0;
+}
+
+.xp-button-default {
+  min-width: 75px;
+}
+
+.xp-split {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.xp-split-main {
+  border-radius: 3px 0 0 3px;
+}
+
+.xp-split-toggle {
+  margin-left: -1px;
+  padding: 0 5px;
+  border-radius: 0 3px 3px 0;
+}
+
+.xp-menu {
+  position: absolute;
+  top: calc(100% + 2px);
+  right: 0;
+  z-index: 60;
+  min-width: 13rem;
+  padding: 2px;
+  border: 1px solid var(--xp-menu-border);
+  background: var(--xp-menu-bg);
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 0.3);
+  font-size: 12px;
+}
+
+.xp-menu[data-align="start"] {
+  right: auto;
+  left: 0;
+}
+
+.xp-menu[data-side="top"] {
+  top: auto;
+  bottom: calc(100% + 2px);
+}
+
+.xp-menu-label {
+  padding: 4px 8px 3px 30px;
+  color: var(--xp-menu-label);
+  font-weight: bold;
+}
+
+.xp-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 16px 4px 6px;
+  border: 0;
+  background: transparent;
+  color: var(--xp-text);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.xp-menu-item:hover,
+.xp-menu-item:focus-visible {
+  outline: none;
+  background: var(--xp-select);
+  color: var(--xp-select-text);
+}
+
+.xp-menu-separator {
+  margin: 3px 1px;
+  border: 0;
+  border-top: 1px solid var(--xp-menu-border);
+}
+
+.xp-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 4px;
+  border: 1px solid var(--xp-menu-border);
+  border-radius: 2px;
+  background: var(--xp-tag-bg);
+  color: var(--xp-muted);
+  font-family: var(--xp-font);
+  font-size: 10px;
+  line-height: 14px;
+  vertical-align: middle;
+}
+
+.xp-tag-inherited {
+  border-color: color-mix(in srgb, var(--xp-select) 45%, var(--xp-field));
+  background: color-mix(in srgb, var(--xp-select) 8%, var(--xp-field));
+}
+
+.xp-method {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 15px;
+  padding: 0 3px;
+  border: 1px solid color-mix(in srgb, var(--method) 70%, #000000);
+  border-radius: 2px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--method) 55%, #ffffff) 0%,
+    var(--method) 55%,
+    color-mix(in srgb, var(--method) 85%, #000000) 100%
+  );
+  color: #ffffff;
+  font-family: var(--xp-font);
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow: 0 -1px rgb(0 0 0 / 0.25);
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Windows, group boxes and list views                                                             */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-window {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0 3px 3px;
+  border: 1px solid var(--xp-frame-dark);
+  border-radius: 8px 8px 0 0;
+  background: var(--xp-frame);
+  box-shadow: 2px 2px 6px rgb(0 0 0 / 0.18);
+}
+
+.xp-window-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  margin: 0 -3px;
+  padding: 3px 8px;
+  border-radius: 7px 7px 0 0;
+  background: var(--xp-title-bg);
+  color: var(--xp-title-text);
+  font-family: var(--xp-font-title);
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: var(--xp-title-shadow);
+}
+
+.xp-window-title-text {
+  min-width: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1.25;
+}
+
+.xp-window-title-text a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.xp-window-title-text a:hover {
+  text-decoration: underline;
+}
+
+.xp-window-body {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px 16px;
+  background: var(--xp-surface);
+}
+
+.xp-groupbox {
+  position: relative;
+  margin-top: 22px;
+  padding: 14px 10px 10px;
+  border: 1px solid var(--xp-etch);
+  border-radius: 4px;
+}
+
+.xp-groupbox-title {
+  position: absolute;
+  top: -0.75em;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 16px);
+  padding: 0 4px;
+  background: var(--xp-surface);
+  color: var(--xp-groupbox-text);
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.xp-groupbox-aside {
+  color: var(--xp-muted);
+  font-size: 11px;
+}
+
+.xp-sunken {
+  border: 1px solid var(--xp-edit-border);
+  background: var(--xp-field);
+}
+
+.xp-listview {
+  overflow-x: auto;
+  border: 1px solid var(--xp-edit-border);
+  background: var(--xp-field);
+}
+
+.xp-listview table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.xp-listview th {
+  padding: 3px 6px;
+  border-right: 1px solid var(--xp-header-divider);
+  border-bottom: 3px solid var(--xp-header-bottom);
+  background: var(--xp-header-bg);
+  box-shadow: inset -1px 0 var(--xp-highlight);
+  color: var(--xp-text);
+  font-weight: normal;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.xp-listview th:hover {
+  border-bottom-color: #f9b119;
+}
+
+.xp-listview th:last-child {
+  border-right: 0;
+}
+
+.xp-listview .xp-listview-name {
+  width: 40%;
+}
+
+.xp-listview td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--xp-row-border);
+  vertical-align: top;
+  word-break: break-all;
+}
+
+.xp-listview tr:last-child td {
+  border-bottom: 0;
+}
+
+.xp-listview td.xp-mono {
+  font-size: 12px;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Page content                                                                                    */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-page-head,
+.xp-folder-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(to right, var(--xp-heading-line), transparent 85%) 1;
+}
+
+.xp-page-head-text,
+.xp-folder-head-text {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.xp-page-title {
+  color: var(--xp-heading);
+  font-family: var(--xp-font-title);
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.2;
+}
+
+.xp-page-description {
+  margin-top: 4px;
+  color: var(--xp-muted);
+  font-size: 14px;
+}
+
+.xp-overview {
+  padding-top: 8px;
+}
+
+.xp-overview > .xp-prose {
+  margin-top: 16px;
+}
+
+.xp-overview .xp-groupbox {
+  max-width: 56rem;
+  background: var(--xp-surface);
+}
+
+.xp-overview .xp-groupbox-title {
+  border-radius: 2px;
+}
+
+.xp-folder {
+  scroll-margin-top: calc(var(--xp-chrome-height) + 12px);
+}
+
+.xp-folder-1,
+.xp-folder-2 {
+  margin-top: 40px;
+}
+
+.xp-overview + .xp-folder-2,
+.xp-content > .xp-folder-1:first-child {
+  margin-top: 28px;
+}
+
+.xp-folder-3,
+.xp-folder-4,
+.xp-folder-5,
+.xp-folder-6 {
+  margin-top: 32px;
+}
+
+.xp-folder-title {
+  color: var(--xp-heading);
+  font-family: var(--xp-font-title);
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.xp-folder:not(.xp-folder-1):not(.xp-folder-2) .xp-folder-title {
+  font-size: 17px;
+}
+
+.xp-folder-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.xp-folder-title a:hover {
+  text-decoration: underline;
+}
+
+.xp-folder-head + .xp-prose {
+  margin-top: 12px;
+}
+
+.xp-breadcrumbs {
+  color: var(--xp-muted);
+  font-size: 11px;
+}
+
+.xp-request {
+  margin-top: 24px;
+  scroll-margin-top: calc(var(--xp-chrome-height) + 12px);
+}
+
+.xp-request-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.xp-request-line {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 28px;
+  border: 1px solid var(--xp-edit-border);
+  background: var(--xp-field);
+}
+
+.xp-request-method {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 0 10px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--method) 60%, #ffffff) 0%,
+    var(--method) 50%,
+    color-mix(in srgb, var(--method) 85%, #000000) 100%
+  );
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.03em;
+  text-shadow: 0 -1px rgb(0 0 0 / 0.25);
+}
+
+.xp-request-url {
+  flex: 1;
+  align-self: center;
+  min-width: 0;
+  padding: 4px 8px;
+  overflow-x: auto;
+  font-family: var(--xp-font-mono);
+  font-size: 12.5px;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.xp-request-copy {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 0 2px;
+}
+
+[data-yd="url-variable"] {
+  padding: 0 2px;
+  background: color-mix(in srgb, var(--xp-link) 12%, var(--xp-field));
+  color: var(--xp-link);
+}
+
+[data-yd="url-param"] {
+  color: var(--method-patch);
+  font-weight: bold;
+}
+
+.xp-grpc-path {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.xp-window-body > .xp-prose {
+  margin-top: 14px;
+}
+
+.xp-auth {
+  font-size: 13px;
+}
+
+.xp-auth code,
+.xp-prose :not(pre) > code {
+  padding: 0 3px;
+  border: 1px solid var(--xp-code-border);
+  background: var(--xp-code-bg);
+  font-family: var(--xp-font-mono);
+  font-size: 0.9em;
+}
+
+.xp-auth [data-yd="inherited"] {
+  color: var(--xp-muted);
+}
+
+.xp-code pre {
+  margin: 0;
+  padding: 8px 10px;
+  overflow-x: auto;
+  font-family: var(--xp-font-mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.xp-code-variables {
+  border-top: 1px solid var(--xp-etch);
+}
+
+.xp-code-caption {
+  padding: 6px 10px 0;
+  color: var(--xp-muted);
+  font-size: 11px;
+}
+
+.xp-empty {
+  padding: 10px;
+  color: var(--xp-muted);
+  font-style: italic;
+}
+
+/* Side-by-side code panels (codePanel: "right"). */
+.xp-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.xp-panels-inline {
+  margin-top: 22px;
+}
+
+.xp-request-aside {
+  min-width: 0;
+  margin-top: 14px;
+}
+
+@media (width >= 80rem) {
+  .xp-request-side {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+    align-items: start;
+    gap: 20px;
+  }
+
+  .xp-request-aside {
+    position: sticky;
+    top: calc(var(--xp-chrome-height) + 16px);
+    margin-top: 0;
+  }
+}
+
+/* Tabs */
+.xp-panel-body {
+  padding: 8px;
+}
+
+.xp-tabstrip {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.xp-tabs {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  min-width: 0;
+  margin-bottom: -1px;
+  padding-left: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.xp-tab {
+  flex-shrink: 0;
+  margin-right: -1px;
+  padding: 3px 10px 3px;
+  border: 1px solid var(--xp-tab-border);
+  border-radius: 3px 3px 0 0;
+  background: var(--xp-tab-bg);
+  color: var(--xp-text);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.xp-tab:hover {
+  border-top-color: #e68b2c;
+  box-shadow: inset 0 2px #ffc83c;
+}
+
+.xp-tab[data-state="active"] {
+  position: relative;
+  z-index: 1;
+  padding-top: 4px;
+  padding-bottom: 5px;
+  border-top-color: #e68b2c;
+  border-bottom-color: var(--xp-tabpage-bg);
+  background: var(--xp-tabpage-bg);
+  box-shadow: inset 0 2px #ffc83c;
+}
+
+.xp-tab:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: -4px;
+}
+
+.xp-tab-status::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 5px;
+  border: 1px solid rgb(0 0 0 / 0.25);
+  border-radius: 50%;
+  background: var(--xp-status, #a0a0a0);
+  vertical-align: -0.05em;
+}
+
+.xp-status-2xx {
+  --xp-status: var(--method-get);
+}
+
+.xp-status-3xx {
+  --xp-status: var(--method-post);
+}
+
+.xp-status-4xx {
+  --xp-status: var(--method-put);
+}
+
+.xp-status-5xx {
+  --xp-status: var(--method-delete);
+}
+
+.xp-tabstrip-copy {
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.xp-tabpage {
+  padding: 6px;
+  border: 1px solid var(--xp-tab-border);
+  border-radius: 0 3px 3px 3px;
+  background: var(--xp-tabpage-bg);
+  box-shadow: 1px 1px var(--xp-tabpage-shadow);
+}
+
+.xp-tabpanel {
+  max-height: 32rem;
+  overflow: auto;
+  border: 1px solid var(--xp-edit-border);
+  background: var(--xp-field);
+}
+
+/* Child links as an Explorer "Tiles" view */
+.xp-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 6px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xp-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  color: var(--xp-text);
+  text-decoration: none;
+}
+
+.xp-tile:hover,
+.xp-tile:focus-visible {
+  outline: none;
+  border-color: var(--xp-select);
+  background: color-mix(in srgb, var(--xp-select) 14%, var(--xp-paper));
+}
+
+.xp-tile-text {
+  min-width: 0;
+}
+
+.xp-tile-name {
+  display: block;
+  font-size: 13px;
+}
+
+.xp-tile-summary {
+  display: block;
+  margin-top: 2px;
+  color: var(--xp-muted);
+  font-size: 12px;
+}
+
+/* 404: an XP error dialog */
+.xp-notfound {
+  display: flex;
+  justify-content: center;
+  padding: 64px 0;
+}
+
+.xp-dialog {
+  width: min(100%, 28rem);
+}
+
+.xp-dialog-body {
+  display: flex;
+  gap: 14px;
+  padding: 18px 16px 12px;
+}
+
+.xp-dialog-title {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.xp-dialog-buttons {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 16px;
+  background: var(--xp-surface);
+}
+
+/* Rendered Markdown */
+.xp-prose {
+  max-width: 72ch;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.xp-prose > * + * {
+  margin-top: 12px;
+}
+
+.xp-prose h1,
+.xp-prose h2,
+.xp-prose h3,
+.xp-prose h4 {
+  margin-top: 24px;
+  color: var(--xp-heading);
+  font-family: var(--xp-font-title);
+  line-height: 1.3;
+}
+
+.xp-prose h1 {
+  font-size: 20px;
+}
+
+.xp-prose h2 {
+  font-size: 18px;
+}
+
+.xp-prose h3 {
+  font-size: 16px;
+}
+
+.xp-prose h4 {
+  font-size: 14px;
+}
+
+.xp-prose a:hover {
+  color: var(--xp-group-link-hover);
+}
+
+.xp-prose ul,
+.xp-prose ol {
+  padding-left: 22px;
+}
+
+.xp-prose li + li {
+  margin-top: 4px;
+}
+
+/* Blockquotes look like XP balloon tips. */
+.xp-prose blockquote {
+  margin-inline: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--xp-balloon-border);
+  border-radius: 6px;
+  background: var(--xp-balloon-bg);
+  box-shadow: 2px 2px 3px rgb(0 0 0 / 0.15);
+}
+
+.xp-prose pre {
+  padding: 8px 10px;
+  overflow-x: auto;
+  border: 1px solid var(--xp-edit-border);
+  background: var(--xp-field);
+  font-family: var(--xp-font-mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+/* Separate borders, so the cells' borders don't replace the table's frame. */
+.xp-prose table {
+  border: 1px solid var(--xp-edit-border);
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--xp-field);
+  font-size: 13px;
+}
+
+.xp-prose th {
+  padding: 3px 8px;
+  border-right: 1px solid var(--xp-header-divider);
+  border-bottom: 3px solid var(--xp-header-bottom);
+  background: var(--xp-header-bg);
+  font-weight: normal;
+  text-align: left;
+}
+
+.xp-prose th:last-child {
+  border-right: 0;
+}
+
+.xp-prose td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--xp-row-border);
+  vertical-align: top;
+}
+
+.xp-prose tr:last-child td {
+  border-bottom: 0;
+}
+
+.xp-prose hr {
+  margin: 24px 0;
+  border: 0;
+  border-top: 1px solid var(--xp-etch);
+  border-bottom: 1px solid var(--xp-highlight);
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Status bar and taskbar                                                                          */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-statusbar {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border-top: 1px solid var(--xp-etch);
+  background: var(--xp-surface);
+  color: var(--xp-text);
+  font-size: 12px;
+}
+
+.xp-statusbar-pane {
+  padding: 2px 8px;
+  border: 1px solid;
+  border-color: var(--xp-shadow-line) var(--xp-highlight) var(--xp-highlight) var(--xp-shadow-line);
+  white-space: nowrap;
+}
+
+.xp-statusbar-main {
+  flex: 1;
+  min-width: 0;
+  white-space: normal;
+}
+
+.xp-statusbar-text a {
+  color: var(--xp-link);
+}
+
+.xp-taskbar {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 40;
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  height: var(--xp-taskbar-height);
+  background: var(--xp-taskbar-bg);
+  color: var(--xp-taskbar-text);
+  font-size: 12px;
+}
+
+.xp-start {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 0 22px 2px 10px;
+  border-radius: 0 12px 12px 0;
+  background: var(--xp-start-bg);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 0.45),
+    inset -3px 0 4px rgb(0 0 0 / 0.25),
+    1px 0 2px rgb(0 0 0 / 0.3);
+  color: #ffffff;
+  font-family: var(--xp-font-title);
+  font-size: 19px;
+  font-style: italic;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: 1px 1px 2px rgb(0 0 0 / 0.55);
+}
+
+.xp-start:hover {
+  filter: brightness(1.08);
+}
+
+.xp-start-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 0.45));
+}
+
+.xp-start-orb {
+  width: 17px;
+  height: 17px;
+  border: 1px solid rgb(0 0 0 / 0.25);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #ffffff 0%,
+    #d9f5d0 25%,
+    #6cc35a 60%,
+    #2e7f22 100%
+  );
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
+}
+
+.xp-taskbar-tasks {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+}
+
+.xp-task-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 200px;
+  height: 24px;
+  padding: 0 10px 0 6px;
+  border: 1px solid var(--xp-task-border);
+  border-radius: 3px;
+  background: var(--xp-task-bg);
+  box-shadow: inset 1px 1px 2px rgb(0 0 0 / 0.35);
+}
+
+.xp-task-button-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xp-tray {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  border-left: 1px solid var(--xp-tray-border);
+  background: var(--xp-tray-bg);
+  box-shadow: inset 1px 0 rgb(255 255 255 / 0.35);
+  white-space: nowrap;
+}
+
+.xp-tray a {
+  color: inherit;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Small screens                                                                                   */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-backdrop {
+  display: none;
+}
+
+@media (width < 64rem) {
+  .xp-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .xp-main {
+    border-left: 0;
+  }
+
+  .xp-nav-toggle {
+    display: inline-flex;
+  }
+
+  .xp-window-controls {
+    display: none;
+  }
+
+  .xp-taskpane {
+    position: fixed;
+    inset: 0 auto var(--xp-taskbar-height) 0;
+    z-index: 50;
+    width: var(--sidebar-width);
+    max-width: 85vw;
+    height: auto;
+    box-shadow: 4px 0 12px rgb(0 0 0 / 0.35);
+    visibility: hidden;
+    translate: -100% 0;
+    transition:
+      translate 0.2s,
+      visibility 0.2s;
+  }
+
+  .xp-taskpane[data-open="true"] {
+    visibility: visible;
+    translate: 0 0;
+  }
+
+  .xp-backdrop {
+    position: fixed;
+    inset: 0 0 var(--xp-taskbar-height);
+    z-index: 45;
+    display: block;
+    background: rgb(0 0 0 / 0.35);
+  }
+
+  .xp-tray span {
+    display: none;
+  }
+}
+
+@media (width < 40rem) {
+  /* The links move to the task pane's "Other Places"; the toolbar keeps the address and environment. */
+  .xp-toolbar-links,
+  .xp-toolbar-yaak {
+    display: none;
+  }
+
+  .xp-taskgroup-places {
+    display: block;
+  }
+
+  .xp-toolbar {
+    gap: 6px;
+    padding: 0 6px;
+  }
+
+  .xp-field-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .xp-address {
+    min-width: 0;
+  }
+
+  .xp-field:not(.xp-address) {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .xp-select {
+    min-width: 0;
+    max-width: 11rem;
+  }
+
+  .xp-titlebar {
+    border-radius: 0;
+  }
+
+  .xp-task-button {
+    display: none;
+  }
+
+  .xp-statusbar {
+    flex-direction: column;
+  }
+
+  .xp-window-body {
+    padding-inline: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xp-taskpane {
+    transition: none;
+  }
+}

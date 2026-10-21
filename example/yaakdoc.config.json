@@ -1,0 +1,20 @@
+{
+  "$schema": "../node_modules/yaakdoc/config.schema.json",
+  "export": "./yaak.json",
+  "theme": "..",
+  "branding": {
+    "title": "Acme Store API",
+    "description": "Manage products, orders and customers of an Acme storefront.",
+    "logo": "./assets/logo.svg",
+    "favicon": "./assets/logo.svg",
+    "links": [
+      { "label": "Status", "href": "https://status.example.com" },
+      { "label": "Support", "href": "mailto:api@example.com" }
+    ],
+    "footer": "© Acme Inc. Questions? [Contact the API team](mailto:api@example.com)."
+  },
+  "environment": "Production",
+  "environments": "public",
+  "runInYaak": true,
+  "themeOptions": { "scheme": "blue", "navOpenDepth": 4 }
+}
