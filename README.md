@@ -43,6 +43,14 @@ Then set the theme in `yaakdoc.config.json`:
 | `showEnvironment` | `true` | Show the environment used for the examples in the toolbar. |
 | `windowControls` | `true` | Show the decorative minimize, maximize and close buttons in the title bar. |
 
+## Pages, tabs and search
+
+- **Tabs.** With several navigation tabs, they're shown in a menu bar under the title bar, and the task pane shows the current tab.
+- **Groups.** Top-level groups are task groups in the task pane. Nested groups are folders in the tree.
+- **Pages.** Custom pages get the same heading as the overview, and wizard-style "< Back" and "Next >" buttons at the bottom.
+- **Icons.** `icon` on pages, groups and tabs takes a [Lucide](https://lucide.dev/icons) icon name, such as `book-open` or `key-round`. The theme draws its own XP-style icons, so names are matched by their words (`key`, `book`, `terminal`, `history`, `house`, `folder`, `list`, `globe`, ...), and other names get a document icon.
+- **Search.** Press Cmd+K / Ctrl+K or `/`, or use the search box in the task pane or the Search button in the toolbar. With `"search": false`, the task pane shows a filter instead.
+
 ## Customizing
 
 - **Colors.** `branding.colors.primary` replaces the scheme's link and selection color, and `branding.colors.accent` replaces the color of hovered task pane links.

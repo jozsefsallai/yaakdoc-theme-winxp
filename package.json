@@ -48,8 +48,8 @@
     "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "@yaakdoc/core": "^0.2.0",
-    "@yaakdoc/react": "^0.2.0",
+    "@yaakdoc/core": "^0.5.0",
+    "@yaakdoc/react": "^0.5.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -59,7 +59,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "typescript": "^7.0.2",
-    "yaakdoc": "^0.2.0"
+    "yaakdoc": "^0.5.0"
   },
   "packageManager": "pnpm@10.24.0"
 }

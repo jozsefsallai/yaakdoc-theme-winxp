@@ -6,6 +6,8 @@ import {
   MobileNavToggle,
   PageActions,
   RunInYaakButton,
+  SearchButton,
+  SearchWindow,
   ThemeToggle,
 } from "@/components/islands";
 
@@ -18,4 +20,6 @@ export default [
   EnvironmentMenu,
   RunInYaakButton,
   ThemeToggle,
+  SearchButton,
+  SearchWindow,
 ];

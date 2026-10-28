@@ -8,9 +8,11 @@ import {
   type LayoutProps,
   Logo,
   Markdown,
-  NavTree,
+  Navigation,
+  NavTabs,
   TreeContent,
   useDocument,
+  useNavigation,
   usePage,
   useRunInYaak,
   useSite,
@@ -28,7 +30,14 @@ import {
   ListIcon,
   SearchIcon,
 } from "./icons";
-import { EnvironmentMenu, MobileNavToggle, ThemeToggle } from "./islands";
+import {
+  EnvironmentMenu,
+  MobileNavToggle,
+  SearchButton,
+  SearchWindow,
+  ThemeToggle,
+} from "./islands";
+import { PageNav, PageSection } from "./page";
 import { CopyPage, KeyValueTable, RunInYaak } from "./parts";
 import { GroupBox, RequestSection } from "./request";
 
@@ -62,7 +71,22 @@ function TitleBar() {
   );
 }
 
-/** Explorer's toolbar row: an address bar, the environment combo box and the site links. */
+/** The navigation tabs as Explorer's menu bar (only rendered with several tabs). */
+function MenuBar() {
+  const { tabs } = useNavigation();
+
+  if (tabs.length < 2) {
+    return null;
+  }
+
+  return (
+    <div className="xp-menubar">
+      <NavTabs />
+    </div>
+  );
+}
+
+/** Explorer's toolbar row: an address bar, search, the environment combo box and the site links. */
 function Toolbar() {
   const site = useSite();
   const page = usePage();
@@ -81,6 +105,8 @@ function Toolbar() {
           <span className="xp-address-text">{address}</span>
         </span>
       </span>
+
+      {site.searchUrl ? <SearchButton variant="toolbar" /> : null}
 
       {options.showEnvironment && document.environments.length > 1 ? (
         <EnvironmentMenu
@@ -116,9 +142,13 @@ function Toolbar() {
   );
 }
 
-/** Explorer's left task pane: a search box and the navigation, top-level folders as task groups. */
+/**
+ * Explorer's left task pane: a search box and the navigation. Top-level groups and folders are task
+ * groups.
+ */
 function TaskPane() {
   const site = useSite();
+  const document = useDocument();
   const runInYaak = useRunInYaak();
   const options = useThemeOptions<WinXPOptions>();
 
@@ -131,18 +161,22 @@ function TaskPane() {
           </div>
 
           <div className="xp-taskgroup-body">
-            <div className="xp-search">
-              <SearchIcon />
-              <NavFilter
-                target={`#${SIDEBAR_ID} [data-yd=nav]`}
-                placeholder="Search requests"
-                className="xp-search-input"
-              />
-            </div>
+            {site.searchUrl ? (
+              <SearchButton />
+            ) : (
+              <div className="xp-search">
+                <SearchIcon />
+                <NavFilter
+                  target={`#${SIDEBAR_ID} [data-yd=navigation]`}
+                  placeholder="Filter"
+                  className="xp-search-input"
+                />
+              </div>
+            )}
 
-            <a href={site.base} className="xp-task-link">
+            <a href={document.referenceBase} className="xp-task-link">
               <ListIcon />
-              Overview
+              {Object.keys(document.pages).length > 0 ? "API overview" : "Overview"}
             </a>
           </div>
         </div>
@@ -172,7 +206,7 @@ function TaskPane() {
           </div>
         ) : null}
 
-        <NavTree className="xp-nav" openDepth={options.navOpenDepth} />
+        <Navigation className="xp-nav" openDepth={options.navOpenDepth} />
       </div>
     </aside>
   );
@@ -354,10 +388,13 @@ function NotFound() {
 
 /**
  * The theme's versions of the base content components. yaakdoc's `<Content>` decides what a page
- * shows (everything, a folder, a request, a 404); these overrides decide how it looks.
+ * shows (a custom page, the API reference, a folder, a request, a 404); these overrides decide how
+ * it looks.
  */
 export const contentComponents = {
   Overview,
+  PageDoc: PageSection,
+  PageNav,
   FolderDoc: FolderSection,
   RequestDoc: RequestSection,
   ChildLinks,
@@ -424,11 +461,15 @@ function Taskbar() {
 
 export function Layout({ page }: LayoutProps) {
   const options = useThemeOptions<WinXPOptions>();
+  const site = useSite();
+  const { tabs } = useNavigation();
 
   return (
     <div
       className="xp-root"
       data-xp-scheme={options.scheme}
+      // The menu bar makes the window chrome taller.
+      data-xp-menubar={tabs.length > 1 || undefined}
       style={{ "--sidebar-width": options.sidebarWidth } as React.CSSProperties}
     >
       <a href="#content" className="xp-skip-link">
@@ -437,6 +478,7 @@ export function Layout({ page }: LayoutProps) {
 
       <header className="xp-chrome">
         <TitleBar />
+        <MenuBar />
         <Toolbar />
       </header>
 
@@ -452,6 +494,8 @@ export function Layout({ page }: LayoutProps) {
       <Taskbar />
 
       {page.kind === "index" ? <ScrollSpy target={`#${SIDEBAR_ID}`} /> : null}
+
+      {site.searchUrl ? <SearchWindow url={site.searchUrl} /> : null}
     </div>
   );
 }

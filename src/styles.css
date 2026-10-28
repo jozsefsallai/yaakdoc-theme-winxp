@@ -94,6 +94,7 @@
 
   --xp-chrome-height: 66px;
   --xp-taskbar-height: 32px;
+  --xp-menubar-height: 22px;
 
   /* Method colors, tuned to the XP palette. */
   --method-get: #3c8d2f;
@@ -104,6 +105,11 @@
   --method-other: #6d6b62;
   --method-grpc: #138a87;
   --method-ws: #1a8bbf;
+}
+
+/* The menu bar (navigation tabs) adds a row to the window chrome. On :root, for scroll-padding. */
+:root:has(.xp-root[data-xp-menubar]) {
+  --xp-chrome-height: calc(66px + var(--xp-menubar-height));
 }
 
 /* Blue ("Default (blue)"), also the fallback. */
@@ -780,6 +786,61 @@ img {
 }
 
 /* ---------------------------------------------------------------------------------------------- */
+/* Menu bar (navigation tabs)                                                                      */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-menubar {
+  height: var(--xp-menubar-height);
+  padding: 0 4px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--xp-etch);
+  background: var(--xp-surface);
+  box-shadow: inset 0 1px var(--xp-highlight);
+  font-size: 12px;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.xp-menubar ul {
+  display: flex;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xp-menubar li {
+  display: flex;
+  align-items: center;
+}
+
+.xp-menubar [data-yd="nav-tab"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 19px;
+  padding: 0 7px;
+  border: 1px solid transparent;
+  color: var(--xp-text);
+  text-decoration: none;
+}
+
+.xp-menubar [data-yd="nav-tab"]:hover,
+.xp-menubar [data-yd="nav-tab"]:focus-visible {
+  outline: none;
+  background: var(--xp-select);
+  color: var(--xp-select-text);
+}
+
+/* The current tab looks like a pressed toolbar button. */
+.xp-menubar [data-yd="nav-tab"][aria-current] {
+  border-color: var(--xp-shadow-line) var(--xp-highlight) var(--xp-highlight) var(--xp-shadow-line);
+  background: var(--xp-toolbar-active-bg);
+  color: var(--xp-text);
+  font-weight: bold;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
 /* Toolbar                                                                                         */
 /* ---------------------------------------------------------------------------------------------- */
 
@@ -888,6 +949,12 @@ img {
 .xp-toolbar-button:active {
   background: var(--xp-toolbar-active-bg);
   box-shadow: inset 1px 1px 1px rgb(0 0 0 / 0.15);
+}
+
+.xp-toolbar-search {
+  flex-shrink: 0;
+  gap: 5px;
+  padding-left: 5px;
 }
 
 .xp-color-mode {
@@ -1009,6 +1076,37 @@ img {
 
 .xp-search-input::-webkit-search-cancel-button {
   display: none;
+}
+
+/* The task pane's search box, a button that opens the search window. */
+.xp-search-trigger {
+  width: 100%;
+  color: var(--xp-muted);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: text;
+}
+
+.xp-search-trigger:hover,
+.xp-search-trigger:focus-visible {
+  outline: none;
+  border-color: var(--xp-select);
+}
+
+.xp-search-placeholder {
+  flex: 1;
+}
+
+.xp-kbd {
+  padding: 0 3px;
+  border: 1px solid var(--xp-menu-border);
+  border-radius: 2px;
+  background: var(--xp-button-bg);
+  color: var(--xp-muted);
+  font-family: var(--xp-font);
+  font-size: 10px;
+  line-height: 13px;
 }
 
 .xp-task-link {
@@ -1181,6 +1279,51 @@ img {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Top-level navigation groups: task groups that are always open. */
+.xp-nav [data-depth="0"] > [data-yd-nav-group] {
+  margin-bottom: 12px;
+}
+
+.xp-nav [data-yd="nav-group-title"] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 25px;
+  padding: 2px 10px;
+  border-radius: 4px 4px 0 0;
+  background: var(--xp-group-head-bg);
+  color: var(--xp-group-title);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.xp-nav [data-yd-nav-group] > [data-yd="nav-list"] {
+  padding: 8px 10px;
+  border: 1px solid var(--xp-group-border);
+  border-top: 0;
+  background: var(--xp-group-body);
+}
+
+/* Pages without an icon of their own get a document icon, like requests get a method badge. */
+.xp-nav [data-yd="nav-link"][data-type="page"]:not(:has(> .xp-icon))::before {
+  content: "";
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6.5 2.5h13l6 6v21h-19z' fill='%23ffffff' stroke='%237d8ba3'/%3E%3Cpath d='M19.5 2.5v6h6' fill='%23c9d3e3' stroke='%237d8ba3' stroke-linejoin='round'/%3E%3Cpath d='M10 13h11M10 16.5h11M10 20h11M10 23.5h7' stroke='%234a78c8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+/* Nested groups with an icon show it instead of the folder icon. */
+.xp-nav
+  [data-depth]:not([data-depth="0"])
+  [data-yd-nav-folder]
+  > details
+  > summary:has(> .xp-icon)::before {
+  display: none;
 }
 
 /* ---------------------------------------------------------------------------------------------- */
@@ -1544,8 +1687,55 @@ img {
   padding-top: 8px;
 }
 
-.xp-overview > .xp-prose {
+.xp-overview > .xp-prose,
+.xp-page > .xp-prose {
   margin-top: 16px;
+}
+
+.xp-page {
+  padding-top: 8px;
+}
+
+.xp-page-head .xp-breadcrumbs {
+  margin-bottom: 2px;
+}
+
+/* Previous and next pages: a wizard's button row under an etched line. */
+.xp-pagenav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 72ch;
+  margin-top: 40px;
+  padding-top: 14px;
+  border-top: 1px solid var(--xp-etch);
+  box-shadow: inset 0 1px var(--xp-highlight);
+}
+
+.xp-pagenav-link {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 9rem;
+  max-width: 100%;
+  padding: 6px 12px;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+.xp-pagenav-next {
+  margin-left: auto;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.xp-pagenav-direction {
+  font-weight: bold;
+}
+
+.xp-pagenav-title {
+  color: var(--xp-muted);
+  font-size: 11px;
 }
 
 .xp-overview .xp-groupbox {
@@ -1946,7 +2136,9 @@ img {
   line-height: 1.6;
 }
 
-.xp-prose > * + * {
+.xp-prose > * + *,
+.xp-prose > [data-yd-env] > * + *,
+.xp-prose > * + [data-yd-env] > :first-child {
   margin-top: 12px;
 }
 
@@ -2046,6 +2238,117 @@ img {
   border: 0;
   border-top: 1px solid var(--xp-etch);
   border-bottom: 1px solid var(--xp-highlight);
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+/* Search window                                                                                   */
+/* ---------------------------------------------------------------------------------------------- */
+
+.xp-search-dialog {
+  width: min(100% - 32px, 36rem);
+  max-height: none;
+  margin: 12vh auto auto;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  color: var(--xp-text);
+}
+
+.xp-search-dialog::backdrop {
+  background: rgb(0 0 0 / 0.3);
+}
+
+.xp-search-dialog .xp-window {
+  box-shadow: 4px 4px 12px rgb(0 0 0 / 0.4);
+}
+
+.xp-search-close {
+  flex-shrink: 0;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.xp-search-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 10px 12px;
+}
+
+.xp-search-body .xp-search {
+  height: 24px;
+}
+
+.xp-search-body .xp-search-input {
+  font-size: 13px;
+}
+
+.xp-search-label {
+  font-size: 12px;
+}
+
+.xp-search-results {
+  height: min(50vh, 22rem);
+  margin-top: 4px;
+  padding: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* "Show in Groups": a bold group name over a line fading to the right. */
+.xp-search-group {
+  margin: 6px 4px 2px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(to right, var(--xp-heading-line), transparent 70%) 1;
+  color: var(--xp-groupbox-text);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.xp-search-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  border: 1px dotted transparent;
+  color: var(--xp-field-text);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.xp-search-result[aria-selected="true"] {
+  border-color: #ffffff;
+  background: var(--xp-select);
+  color: var(--xp-select-text);
+}
+
+.xp-search-result-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.xp-search-result-title,
+.xp-search-result-detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xp-search-result-detail {
+  color: var(--xp-muted);
+  font-size: 11px;
+}
+
+.xp-search-result[aria-selected="true"] .xp-search-result-detail {
+  color: inherit;
+  opacity: 0.85;
+}
+
+.xp-search-dialog .xp-statusbar {
+  border-top: 0;
 }
 
 /* ---------------------------------------------------------------------------------------------- */
@@ -2276,6 +2579,10 @@ img {
   .xp-select {
     min-width: 0;
     max-width: 11rem;
+  }
+
+  .xp-toolbar-search-text {
+    display: none;
   }
 
   .xp-titlebar {

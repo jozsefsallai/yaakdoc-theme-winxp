@@ -266,3 +266,88 @@ export function MoonIcon({ size = 16, className }: IconProps) {
     </Svg>
   );
 }
+
+export function BookIcon({ size = 16, className }: IconProps) {
+  const id = useId();
+
+  return (
+    <Svg size={size} className={className}>
+      <defs>
+        <linearGradient id={`${id}c`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#2f62c9" />
+          <stop offset="1" stopColor="#6b9cf0" />
+        </linearGradient>
+      </defs>
+
+      <path
+        d="M7.5 25.5V5.5a3 3 0 0 1 3-3h15v20h-15a3 3 0 0 0 0 6h15"
+        fill="#ffffff"
+        stroke="#6b7c99"
+      />
+      <path
+        d="M7.5 25.5V5.5a3 3 0 0 1 3-3h15v20h-15a3 3 0 0 0-3 3z"
+        fill={`url(#${id}c)`}
+        stroke="#1d3f8a"
+      />
+      <path d="M12 8h9M12 11.5h7" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M17 13.5h4l-2 2.5z" fill="#ffd23f" stroke="#c97f06" strokeWidth="0.75" />
+    </Svg>
+  );
+}
+
+export function TerminalIcon({ size = 16, className }: IconProps) {
+  const id = useId();
+
+  return (
+    <Svg size={size} className={className}>
+      <defs>
+        <linearGradient id={`${id}t`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#3d8bff" />
+          <stop offset="1" stopColor="#0046d5" />
+        </linearGradient>
+      </defs>
+
+      <rect x="2.5" y="4.5" width="27" height="23" rx="2" fill="#000000" stroke="#0831d9" />
+      <path d="M3 6.5a1.5 1.5 0 0 1 1.5-1.5h23A1.5 1.5 0 0 1 29 6.5V10H3z" fill={`url(#${id}t)`} />
+      <path d="M7 15l4 3-4 3" fill="none" stroke="#c0c0c0" strokeWidth="2" strokeLinecap="round" />
+      <path d="M13 22h7" stroke="#c0c0c0" strokeWidth="2" strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+export function ClockIcon({ size = 16, className }: IconProps) {
+  const id = useId();
+
+  return (
+    <Svg size={size} className={className}>
+      <defs>
+        <radialGradient id={`${id}f`} cx="0.35" cy="0.3" r="0.8">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#d9e4f7" />
+        </radialGradient>
+      </defs>
+
+      <circle cx="16" cy="16" r="13" fill={`url(#${id}f)`} stroke="#2a62c9" strokeWidth="2.5" />
+      <path d="M16 8v8l5 3" fill="none" stroke="#1c3f94" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="16" cy="16" r="1.5" fill="#c1272d" />
+    </Svg>
+  );
+}
+
+export function HomeIcon({ size = 16, className }: IconProps) {
+  return (
+    <Svg size={size} className={className}>
+      <path d="M6.5 15.5v12h19v-12" fill="#fdf6e3" stroke="#8a6d3b" />
+      <path
+        d="M3 16.5L16 4.5l13 12"
+        fill="none"
+        stroke="#b2361c"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <rect x="13.5" y="19.5" width="5" height="8" fill="#6b9cf0" stroke="#2a62c9" />
+      <rect x="8.5" y="18.5" width="3.5" height="3.5" fill="#cfe6ff" stroke="#2a62c9" />
+      <rect x="20" y="18.5" width="3.5" height="3.5" fill="#cfe6ff" stroke="#2a62c9" />
+    </Svg>
+  );
+}
