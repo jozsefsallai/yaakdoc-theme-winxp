@@ -1,6 +1,6 @@
 {
   "name": "yaakdoc-theme-winxp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Windows XP Luna inspired theme for yaakdoc.",
   "type": "module",
   "exports": {
