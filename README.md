@@ -1,6 +1,8 @@
 # yaakdoc-theme-winxp
 
-A [yaakdoc](https://github.com/jozsefsallai/yaakdoc#readme) theme inspired by the Windows XP Luna visual style.
+A [yaakdoc](https://yaakdoc.dev) theme inspired by the Windows XP Luna visual style.
+
+![The winxp theme with the Luna Blue scheme](./preview.png)
 
 **DEMO: https://yaakdoc-theme-winxp.vercel.app**
 
@@ -49,11 +51,13 @@ Then set the theme in `yaakdoc.config.json`:
 - **Groups.** Top-level groups are task groups in the task pane. Nested groups are folders in the tree.
 - **Pages.** Custom pages get the same heading as the overview, and wizard-style "< Back" and "Next >" buttons at the bottom.
 - **Icons.** `icon` on pages, groups and tabs takes a [Lucide](https://lucide.dev/icons) icon name, such as `book-open` or `key-round`. The theme draws its own XP-style icons, so names are matched by their words (`key`, `book`, `terminal`, `history`, `house`, `folder`, `list`, `globe`, ...), and other names get a document icon.
+- **Example responses.** Each response is a tab in an "Example response" window. Response headers written at the top of a ` ```response ` block are listed above the body.
 - **Search.** Press Cmd+K / Ctrl+K or `/`, or use the search box in the task pane or the Search button in the toolbar. With `"search": false`, the task pane shows a filter instead.
 
 ## Customizing
 
 - **Colors.** `branding.colors.primary` replaces the scheme's link and selection color, and `branding.colors.accent` replaces the color of hovered task pane links.
+- **Logo.** The logo is shown in the title bar, next to the site title, at `branding.logo.height` (18 px by default, at most 22 px so it fits the title bar). `branding.logo.showTitle: false` hides the title.
 - **Fonts.** The theme uses system fonts: Tahoma and Trebuchet MS for the UI, and Lucida Console for code. Other fonts are used where those aren't installed. `branding.fonts` overrides them.
 - **Color mode.** Light mode uses the chosen Luna scheme, and dark mode uses Royale Noir. `branding.defaultColorMode` and `branding.colorModeToggle` work as usual. The toggle is a sun/moon button in the toolbar. Per-mode branding colors (`branding.colors.light` / `.dark`) apply to each mode.
 - **Everything else.** Use `branding.customCss`, or run `npx yaakdoc eject` to copy the theme into your project.

@@ -7,6 +7,7 @@ import {
   Html,
   Markdown,
   RequestUrl,
+  ResponseHeaders,
   statusClass,
   useThemeOptions,
 } from "@yaakdoc/react";
@@ -231,6 +232,8 @@ export function ResponsePanel({
           data-status={response.status ?? undefined}
           className="xp-tabpanel xp-code"
         >
+          <ResponseHeaders headers={response.headers} className="xp-response-headers" />
+
           {response.empty ? (
             <p className="xp-empty">No response body</p>
           ) : (

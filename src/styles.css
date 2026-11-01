@@ -691,9 +691,10 @@ img {
   text-decoration: none;
 }
 
+/* branding.logo.height sets --yd-logo-height; the title bar fits at most 22px. */
 .xp-caption img {
   width: auto;
-  height: 18px;
+  height: min(var(--yd-logo-height, 18px), 22px);
 }
 
 .xp-caption [data-yd="site-title"] {
@@ -1911,6 +1912,37 @@ img {
   padding: 6px 10px 0;
   color: var(--xp-muted);
   font-size: 11px;
+}
+
+/* Response headers above an example response body, like the raw HTTP message. */
+.xp-response-headers {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 2px 14px;
+  margin: 0;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--xp-code-border);
+  background: var(--xp-code-bg);
+  font-family: var(--xp-font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.xp-response-headers > div {
+  display: contents;
+}
+
+.xp-response-headers dt {
+  color: var(--xp-muted);
+}
+
+.xp-response-headers dt::after {
+  content: ":";
+}
+
+.xp-response-headers dd {
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .xp-empty {

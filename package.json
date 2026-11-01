@@ -7,6 +7,12 @@
     ".": "./theme.ts",
     "./package.json": "./package.json"
   },
+  "yaakdoc": {
+    "displayName": "Windows XP",
+    "description": "Inspired by the Windows XP Luna visual style: Blue, Olive Green and Silver schemes, Royale Noir in dark mode, a task pane, tabs and search.",
+    "preview": "https://raw.githubusercontent.com/jozsefsallai/yaakdoc-theme-winxp/master/preview.png",
+    "demo": "https://yaakdoc-theme-winxp.vercel.app"
+  },
   "keywords": [
     "yaak",
     "yaakdoc",
@@ -48,8 +54,8 @@
     "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "@yaakdoc/core": "^0.5.0",
-    "@yaakdoc/react": "^0.5.0",
+    "@yaakdoc/core": "^0.6.0",
+    "@yaakdoc/react": "^0.6.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -59,7 +65,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "typescript": "^7.0.2",
-    "yaakdoc": "^0.5.0"
+    "yaakdoc": "^0.6.0"
   },
   "packageManager": "pnpm@10.24.0"
 }

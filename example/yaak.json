@@ -449,7 +449,7 @@
         "method": "POST",
         "url": "${[ base_url ]}/products",
         "sortPriority": 2,
-        "description": "Create a new product.\n\n```json\n{ \"id\": \"prod_124\", \"status\": \"draft\" }\n```\n\nThe response contains the created product.\n\nThe API validates the payload and returns `422` when a field is invalid.\n\n```response:201\n{\n  \"id\": \"prod_125\",\n  \"name\": \"Running shoes\",\n  \"status\": \"draft\"\n}\n```\n\n```response:422\n{\n  \"error\": \"validation_failed\",\n  \"fields\": {\n    \"price\": \"must be a positive integer\"\n  }\n}\n```",
+        "description": "Create a new product.\n\n```json\n{ \"id\": \"prod_124\", \"status\": \"draft\" }\n```\n\nThe response contains the created product.\n\nThe API validates the payload and returns `422` when a field is invalid.\n\n```response:201\nLocation: /v1/products/prod_125\nContent-Type: application/json\n\n{\n  \"id\": \"prod_125\",\n  \"name\": \"Running shoes\",\n  \"status\": \"draft\"\n}\n```\n\n```response:422\n{\n  \"error\": \"validation_failed\",\n  \"fields\": {\n    \"price\": \"must be a positive integer\"\n  }\n}\n```",
         "headers": [
           {
             "enabled": true,
@@ -669,7 +669,7 @@
         "method": "GET",
         "url": "${[ base_url ]}/health",
         "sortPriority": 10,
-        "description": "Returns `ok` when the API is up. No authentication required.\n\n```response:200\nok\n```\n\n```response:503\n{\n  \"status\": \"degraded\",\n  \"checks\": {\n    \"database\": \"down\"\n  }\n}\n```",
+        "description": "Returns `ok` when the API is up. No authentication required.\n\n```response:200\nok\n```\n\n```response:503\nRetry-After: 30\nCache-Control: no-store\n\n{\n  \"status\": \"degraded\",\n  \"checks\": {\n    \"database\": \"down\"\n  }\n}\n```",
         "headers": [],
         "urlParameters": [],
         "bodyType": null,
